@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+# Copyright 2019 Jesse Price
+
 profiles=$(sed -nE "s/(\[|\[profile )(default|.+)\]/\2/p" < ~/.aws/config )
 
 IFSBAK=$IFS

@@ -51,3 +51,5 @@ Not necessary to run, just proof this thing does what it says:
 aws-superstar@hackstation[~]: (company-main): echo $AWS_PROFILE
 company-main
 ```
+
+###### Copyright 2019 Jesse Price ######
