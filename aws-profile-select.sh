@@ -9,6 +9,9 @@ IFS=$'\n'
 profiles=($profiles)
 IFS=$IFSBAK
 
+# Enable setting of AWS_SDK_LOAD_CONFIG by default
+sdk=1
+
 # Backup prompt as a separate variable if not already backed up
 if [ -z "$PS1BAK" ]; then
   export PS1BAK="$PS1"
@@ -18,8 +21,10 @@ else
 fi
 
 function main {
+  printf "Current value of AWS_SDK_LOAD_CONFIG: ${AWS_SDK_LOAD_CONFIG}\n"
   echo
   echo ------------- AWS Profile Select-O-Matic -------------
+  echo
   if [ -z "$AWS_PROFILE" ]; then
     printf "No profile set yet\n\n"
   else
@@ -31,6 +36,14 @@ function main {
   # Show the menu
   selection_menu
 }
+
+function usage { 
+  echo "Usage: aps [-n|--no-sdk] [-h|--help]"
+  echo "For normal usage, just run aps and make your selection followed by Enter."
+  echo "If you do not want the AWS_SDK_LOAD_CONFIG environment variable to be set to true, append -n or --no-sdk to the command"
+  # exit 1
+}
+
 function selection_menu {
   echo "-: Unset Profile"
   for (( i=0; i<${#profiles[@]}; i++ )); do
@@ -60,8 +73,15 @@ function read_selection {
       export PS1="$PS1BAK"
       in_range=true
     elif (( $choice >= 0 )) && (( $choice <= ${#profiles[@]} )); then
+      # Set AWS_SDK_LOAD_CONFIG to true to make this useful for tools such as Terraform and Serverless framework
+      if [ $sdk == 1 ]; then
+        export AWS_SDK_LOAD_CONFIG=1
+      else
+        export AWS_SDK_LOAD_CONFIG=0
+      fi
       echo "Activating profile ${choice}: ${profiles[choice]}"
       export AWS_PROFILE="${profiles[choice]}"
+      echo 
       export PS1="${PS1_local}(${profiles[choice]}): "
       in_range=true
     else
@@ -74,5 +94,22 @@ function read_selection {
   done
 }
 
-# Kick off the main function:
-main
+if [ $# -gt 0 ]; then
+  while [ ! $# -eq 0 ]
+  do
+    case "$1" in
+      --help | -h)
+        usage
+        ;;
+      --no-sdk | -n)
+        sdk=0
+        # Kick off the main function:
+        main
+        ;;
+    esac
+    shift
+  done
+else 
+  # Kick off the main function:
+  main
+fi
