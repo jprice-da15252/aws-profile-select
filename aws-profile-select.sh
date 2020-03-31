@@ -2,7 +2,7 @@
 
 # Copyright 2019 Jesse Price
 
-profiles=$(sed -nE "s/(\[|\[profile )(default|.+)\]/\2/p" < ~/.aws/config )
+profiles=$(cat ~/.aws/config | grep  '^\['| sed  -E 's/\[profile (.*)/\1/g' | sed 's/\[//; s/\]//')
 
 IFSBAK=$IFS
 IFS=$'\n'
