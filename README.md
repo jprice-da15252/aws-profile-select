@@ -61,4 +61,4 @@ aws-superstar@hackstation[~]: (company-main): echo $AWS_PROFILE
 company-main
 ```
 
-###### Copyright 2019 Jesse Price
+###### © Copyright 2021 Jesse Price, all rights reserved
