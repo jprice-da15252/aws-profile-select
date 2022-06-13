@@ -1,5 +1,7 @@
 # AWS Profile Select Tool
 
+_Note: Only tested with bash, version 4+_
+
 ## A painless way to select an AWS profile
 
 This script scans your aws configuration for profile names, and allows you to choose them by number, because messing with environment variables repeatedly is toil. Toil sucks.
@@ -12,7 +14,7 @@ It's also a handy way to see the currently selected profile, as it is given in a
 
 ##### Shell compatibility
 
-APS has been tested to be compatible with the following shell versions:
+aps has been tested to be compatible with the following shell versions:
 
 -   Bash: v4 and newer
 -   ZSH: tested with v5.8 (with [Oh My Zsh!](https://github.com/ohmyzsh/ohmyzsh/wiki) installed, but should work equally well without it)
