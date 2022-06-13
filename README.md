@@ -35,7 +35,7 @@ _Note_: the procedures below will be replaced by a homebrew tap in the near futu
 
 1. Download, optionally inspect, and copy the script to an appropriate folder:
     ```
-    curl -o /tmp/aws-profile-select.sh https://raw.githubusercontent.com/jprice-da15252/aws-profile-select/master/aws-profile-select.sh
+    curl -o /tmp/aws-profile-select.sh https://raw.githubusercontent.com/jprice-da15252/aws-profile-select/main/aws-profile-select.sh
     sudo cp /tmp/aws-profile-select.sh /usr/local/bin/aws-profile-select.sh
     ```
 2. Add aliases:
