@@ -1,7 +1,5 @@
 # AWS Profile Select Tool
 
-_Note: Only tested with bash, version 4+_
-
 ## A painless way to select an AWS profile
 
 This script scans your aws configuration for profile names, and allows you to choose them by number, because messing with environment variables repeatedly is toil. Toil sucks.
