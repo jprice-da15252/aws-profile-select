@@ -7,11 +7,23 @@ rprompt_config="true"
 # Enable setting of AWS_SDK_LOAD_CONFIG by default
 sdk=1
 
+AWS_PROFILE="technative-userauth"
+
+# Voer AWS CLI-commando uit om de identiteit op te halen
+aws_sts_output=$(aws sts get-caller-identity --profile $AWS_PROFILE 2>&1)
+
+# Controleer de uitvoer van het AWS CLI-commando
+if [ $? -eq 0 ]; then
+    echo "Valid AWS-session found:"
+    echo "$aws_sts_output"
+else
+    echo "No valid AWS-session found. Voer 'aws-mfa' uit om in te loggen."
+fi
+
 
 if [ -n "$ZSH_VERSION" ]; then
   # zsh-handling
   shell_type=zsh
-  echo "!! check zsh_version"
   setopt ksh_arrays
   setopt SH_WORD_SPLIT
   if [ -z "$PROMPTBAK" ]; then
