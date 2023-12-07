@@ -1,9 +1,17 @@
-# Copyright 2022 Jesse Price
-# set -x
+## Copyright 2022 Jesse Price
+
+## User configurable setings
+
+# User RPROMPT function, zsh only
+rprompt_config="true"
+# Enable setting of AWS_SDK_LOAD_CONFIG by default
+sdk=1
+
 
 if [ -n "$ZSH_VERSION" ]; then
   # zsh-handling
   shell_type=zsh
+  echo "!! check zsh_version"
   setopt ksh_arrays
   setopt SH_WORD_SPLIT
   if [ -z "$PROMPTBAK" ]; then
@@ -31,9 +39,6 @@ profiles=($profiles)
 IFS=$IFSBAK
 
 profiles_len=${#profiles[*]}
-
-# Enable setting of AWS_SDK_LOAD_CONFIG by default
-sdk=1
 
 function main {
   printf "Current value of AWS_SDK_LOAD_CONFIG: ${AWS_SDK_LOAD_CONFIG}\n"
@@ -98,6 +103,9 @@ function read_selection {
       unset AWS_PROFILE
       if [[ $shell_type == "zsh" ]]; then
         export PROMPT="$PROMPTBAK"
+        if [[ ${rprompt_config} == "true" ]]; then
+          unset RPROMPT
+        fi
       else
         export PS1="$PS1BAK"
       fi
@@ -112,9 +120,12 @@ function read_selection {
       echo "Activating profile ${choice}: ${profiles[choice]}"
       export AWS_PROFILE="${profiles[choice]}"
       new_prompt="${cmd_prompt}aps:(${profiles[choice]}): "
-      echo
       if [[ $shell_type == "zsh" ]]; then
-        export PROMPT="$new_prompt"
+        if [[ ${rprompt_config} == "true" ]]; then
+          export RPROMPT=${profiles[choice]}
+        else
+          export PROMPT="$new_prompt"
+        fi
       else
         export PS1="$new_prompt"
       fi
