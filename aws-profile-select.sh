@@ -1,5 +1,25 @@
-# Copyright 2022 Jesse Price
-# set -x
+## Copyright 2022 Jesse Price
+
+## User configurable setings
+
+# User RPROMPT function, zsh only
+rprompt_config="true"
+# Enable setting of AWS_SDK_LOAD_CONFIG by default
+sdk=1
+
+AWS_PROFILE="technative-userauth"
+
+# Voer AWS CLI-commando uit om de identiteit op te halen
+aws_sts_output=$(aws sts get-caller-identity --profile $AWS_PROFILE 2>&1)
+
+# Controleer de uitvoer van het AWS CLI-commando
+if [ $? -eq 0 ]; then
+    echo "Valid AWS-session found:"
+    echo "$aws_sts_output"
+else
+    echo "No valid AWS-session found. Voer 'aws-mfa' uit om in te loggen."
+fi
+
 
 if [ -n "$ZSH_VERSION" ]; then
   # zsh-handling
@@ -31,9 +51,6 @@ profiles=($profiles)
 IFS=$IFSBAK
 
 profiles_len=${#profiles[*]}
-
-# Enable setting of AWS_SDK_LOAD_CONFIG by default
-sdk=1
 
 function main {
   printf "Current value of AWS_SDK_LOAD_CONFIG: ${AWS_SDK_LOAD_CONFIG}\n"
@@ -98,6 +115,9 @@ function read_selection {
       unset AWS_PROFILE
       if [[ $shell_type == "zsh" ]]; then
         export PROMPT="$PROMPTBAK"
+        if [[ ${rprompt_config} == "true" ]]; then
+          unset RPROMPT
+        fi
       else
         export PS1="$PS1BAK"
       fi
@@ -112,9 +132,12 @@ function read_selection {
       echo "Activating profile ${choice}: ${profiles[choice]}"
       export AWS_PROFILE="${profiles[choice]}"
       new_prompt="${cmd_prompt}aps:(${profiles[choice]}): "
-      echo
       if [[ $shell_type == "zsh" ]]; then
-        export PROMPT="$new_prompt"
+        if [[ ${rprompt_config} == "true" ]]; then
+          export RPROMPT=${profiles[choice]}
+        else
+          export PROMPT="$new_prompt"
+        fi
       else
         export PS1="$new_prompt"
       fi
